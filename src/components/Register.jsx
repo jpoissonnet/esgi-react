@@ -1,21 +1,41 @@
 import "../App.css";
 import { Field, Form, Formik } from "formik";
 
+const saveUser = async (values) => {
+  const users = localStorage.getItem("users");
+  if (users) {
+    const parsedUsers = JSON.parse(users);
+    const doesUserExist = parsedUsers.find(
+      (u) => u.email === values.email || u.username === values.username,
+    );
+    if (doesUserExist) {
+      alert("User already exists");
+      return;
+    }
+    parsedUsers.push(values);
+    localStorage.setItem("users", JSON.stringify(parsedUsers));
+    return;
+  }
+  localStorage.setItem("users", JSON.stringify([values]));
+};
+
 const Register = () => {
   return (
     <>
       <h1>Register</h1>
       <Formik
         initialValues={{
+          name: "",
+          surname: "",
+          username: "",
           email: "",
           password: "",
           confirm_password: "",
         }}
         onSubmit={async (values) => {
-          console.log(values);
+          saveUser(values);
         }}
         validateOnBlur
-        validateOnChange
         validate={(values) => {
           const errors = {};
 
@@ -37,34 +57,61 @@ const Register = () => {
           return errors;
         }}
       >
-        {({ errors }) => (
+        {({ errors, touched }) => (
           <Form
             className={"flex flex-col items-center justify-center my-3 gap-3"}
           >
+            {/* nom, prénom, email, username, password */}
+            <Field
+              name="name"
+              placeholder="name"
+              type="text"
+              className={"input input-bordered input-primary w-full max-w-xs"}
+            />
+            {errors.name && touched.name && <span>{errors.name}</span>}
+            <Field
+              name="surname"
+              placeholder="surname"
+              type="text"
+              className={"input input-bordered input-primary w-full max-w-xs"}
+            />
+            {errors.surname && touched.surname && <span>{errors.surname}</span>}
+            <Field
+              name="username"
+              placeholder="username"
+              type="text"
+              className={"input input-bordered input-primary w-full max-w-xs"}
+            />
             <Field
               name="email"
               placeholder="email"
               type="text"
               className={"input input-bordered input-primary w-full max-w-xs"}
             />
-            <div>{errors.email}</div>
+            {errors.email && touched.email && <span>{errors.email}</span>}
             <Field
               name="password"
               placeholder="password"
               type="password"
               className={"input input-bordered input-primary w-full max-w-xs"}
             />
-            <div>{errors.password}</div>
+            {errors.password && touched.password && (
+              <span>{errors.password}</span>
+            )}
             <Field
               name="confirm_password"
               placeholder="confirm password"
               type="password"
               className={"input input-bordered input-primary w-full max-w-xs"}
             />
-            <div>{errors.confirm_password}</div>
-            <button type="submit">Submit</button>
+            {errors.confirm_password && touched.confirm_password && (
+              <span>{errors.confirm_password}</span>
+            )}
+            <button type="submit" className={"btn btn-primary w-full max-w-xs"}>
+              Submit
+            </button>
             <p>
-              Looking to register? <a href="/register">Register</a>
+              Already have an account? <a href="/login">Login</a>
             </p>
           </Form>
         )}
