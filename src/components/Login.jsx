@@ -46,7 +46,10 @@ const Login = () => {
               Submit
             </button>
             <p>
-              Looking for account creation? <a href="/register">Register</a>
+              Looking for account creation?{" "}
+              <a href="/register" className="text-primary">
+                Register
+              </a>
             </p>
           </Form>
         )}

@@ -9,7 +9,7 @@ import {
 import Login from "./components/Login.jsx";
 import Register from "./components/Register.jsx";
 import App from "./App.jsx";
-import Auth from "./components/Auth.jsx";
+import Auth from "./layouts/Auth.jsx";
 
 const router = createBrowserRouter([
   {

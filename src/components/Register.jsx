@@ -97,7 +97,10 @@ const Register = () => {
               Submit
             </button>
             <p>
-              Already have an account? <a href="/login">Login</a>
+              Already have an account?{" "}
+              <a href="/login" className="text-primary">
+                Login
+              </a>
             </p>
           </Form>
         )}
