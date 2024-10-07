@@ -1,21 +1,10 @@
 import "../App.css";
 import { Field, Form, Formik } from "formik";
+import { authenticateUser } from "../modules/auth/user.module.js";
+import { useNavigate } from "react-router-dom";
 
-const authentiticateUser = async (values) =>
-  new Promise((resolve, reject) => {
-    const users = localStorage.getItem("users");
-    if (users) {
-      const parsedUsers = JSON.parse(users);
-      const user = parsedUsers.find(
-        (u) => u.email === values.email && u.password === values.password,
-      );
-      if (user) {
-        resolve("youhou");
-      }
-    }
-    reject("User or password incorrect");
-  });
 const Login = () => {
+  const navigate = useNavigate();
   return (
     <>
       <h1>Login</h1>
@@ -26,10 +15,11 @@ const Login = () => {
         }}
         onSubmit={async (values) => {
           try {
-            await authentiticateUser(values);
+            await authenticateUser(values);
           } catch (error) {
             alert(error);
           }
+          navigate("/");
         }}
       >
         {({ errors, touched }) => (

@@ -1,25 +1,10 @@
 import "../App.css";
 import { Field, Form, Formik } from "formik";
-
-const saveUser = async (values) => {
-  const users = localStorage.getItem("users");
-  if (users) {
-    const parsedUsers = JSON.parse(users);
-    const doesUserExist = parsedUsers.find(
-      (u) => u.email === values.email || u.username === values.username,
-    );
-    if (doesUserExist) {
-      alert("User already exists");
-      return;
-    }
-    parsedUsers.push(values);
-    localStorage.setItem("users", JSON.stringify(parsedUsers));
-    return;
-  }
-  localStorage.setItem("users", JSON.stringify([values]));
-};
+import { saveUser } from "../modules/auth/user.module.js";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   return (
     <>
       <h1>Register</h1>
@@ -33,7 +18,8 @@ const Register = () => {
           confirm_password: "",
         }}
         onSubmit={async (values) => {
-          saveUser(values);
+          await saveUser(values);
+          navigate("/login");
         }}
         validateOnBlur
         validate={(values) => {
