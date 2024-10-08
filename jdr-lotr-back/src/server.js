@@ -11,6 +11,7 @@ import { usersRoutes } from "./routes/users.js";
 import { gamesRoutes } from "./routes/games.js";
 //bdd
 import { sequelize } from "./bdd.js";
+import { WebSocketServer } from "ws";
 
 //Test de la connexion
 try {
@@ -96,6 +97,22 @@ app.decorate("authenticate", async (request, reply) => {
 usersRoutes(app, blacklistedTokens);
 //gestion des jeux
 gamesRoutes(app);
+
+const wss = new WebSocketServer({ port: 8080 });
+
+wss.on("connection", function connection(ws) {
+  ws.on("error", console.error);
+
+  ws.on("message", function message(data) {
+    console.log("received: %s", data);
+  });
+
+  ws.on("pong", (data) => {
+    console.log("received: %s", data);
+  });
+
+  ws.send("something");
+});
 
 /**********
  * START
