@@ -22,8 +22,9 @@ const Register = () => {
           const responseJson = await response.json();
           if (responseJson.error) {
             alert(responseJson.error);
+            return;
           }
-          // navigate("/login");
+          navigate("/login");
         }}
         validateOnBlur
         validate={(values) => {

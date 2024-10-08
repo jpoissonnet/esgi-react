@@ -24,7 +24,7 @@ try {
  * API
  * avec fastify
  */
-let blacklistedTokens = [];
+const blacklistedTokens = [];
 const app = fastify();
 //Ajout du plugin fastify-bcrypt pour le hash du mdp
 await app
@@ -93,7 +93,7 @@ app.decorate("authenticate", async (request, reply) => {
   }
 });
 //gestion utilisateur
-usersRoutes(app);
+usersRoutes(app, blacklistedTokens);
 //gestion des jeux
 gamesRoutes(app);
 

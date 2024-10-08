@@ -1,5 +1,6 @@
 import User from "../models/users.js";
 import { Op } from "sequelize";
+import { sendEmail } from "./mailsender.js";
 
 async function generateID(id) {
   const { count } = await findAndCountAllUsersById(id);
@@ -44,6 +45,15 @@ export async function findAndCountAllUsersByUsername(username) {
     },
   });
 }
+
+export async function verifyUser(id) {
+  const user = await User.findByPk(id);
+  if (!user) {
+    return { error: "Utilisateur non trouvé" };
+  }
+  user.verified = true;
+  return user.save();
+}
 export async function registerUser(userDatas, bcrypt) {
   if (!userDatas) {
     return { error: "Aucune donnée à enregistrer" };
@@ -79,7 +89,14 @@ export async function registerUser(userDatas, bcrypt) {
     email,
     password: hashedPassword,
   };
-  return await User.create(user);
+  sendEmail(
+    email,
+    "Vérification de votre compte",
+    `<h1>Vérifiez votre compte en cliquant sur ce lien <a href='http://localhost:3000/verify/${id}'>Vérifier</a></h1>`,
+  )
+    .then(() => console.log("Email envoyé"))
+    .catch((err) => console.log(err));
+  return User.create(user);
 }
 export async function loginUser(userDatas, app) {
   if (!userDatas) {
@@ -96,12 +113,13 @@ export async function loginUser(userDatas, app) {
       error: "Il n'y a pas d'utilisateur associé à cette adresse email.",
     };
   }
-
   // else if (rows[0].verified === false) {
-  // 	return {
-  // 		error: "Votre compte n'est pas encore vérifié. Veuillez vérifier votre boîte mail.",
-  // 	};
-  // }	//récupération de l'utilisateur
+  //   return {
+  //     error:
+  //       "Votre compte n'est pas encore vérifié. Veuillez vérifier votre boîte mail.",
+  //   };
+  // }
+  //récupération de l'utilisateur
   const user = await User.findOne({
     where: {
       email: {

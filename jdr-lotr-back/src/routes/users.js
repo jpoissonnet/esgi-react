@@ -3,9 +3,10 @@ import {
   getUsers,
   loginUser,
   registerUser,
+  verifyUser,
 } from "../controllers/users.js";
 
-export function usersRoutes(app) {
+export function usersRoutes(app, blacklistedTokens) {
   app
     .post("/login", async (request, reply) => {
       reply.send(await loginUser(request.body, app));
@@ -39,5 +40,8 @@ export function usersRoutes(app) {
   //récupération d'un utilisateur par son id
   app.get("/users/:id", async (request, reply) => {
     reply.send(await getUserById(request.params.id));
+  });
+  app.get("/users/verify/:id", async (request, reply) => {
+    reply.send(await verifyUser(request.params.id));
   });
 }
