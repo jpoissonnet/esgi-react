@@ -2,9 +2,24 @@ import "../App.css";
 import { Field, Form, Formik } from "formik";
 import { authenticateUser } from "../modules/auth/user.module.js";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (values) => {
+    try {
+      await authenticateUser(values);
+    } catch (error) {
+      console.error(error);
+      setError(error?.message || error);
+      setTimeout(() => setError(null), 2000);
+      return;
+    }
+    navigate("/");
+  };
+
   return (
     <>
       <h1>Login</h1>
@@ -13,14 +28,7 @@ const Login = () => {
           email: "",
           password: "",
         }}
-        onSubmit={async (values) => {
-          try {
-            await authenticateUser(values);
-          } catch (error) {
-            alert(error);
-          }
-          navigate("/");
-        }}
+        onSubmit={handleSubmit}
       >
         {({ errors, touched }) => (
           <Form
@@ -42,6 +50,7 @@ const Login = () => {
             {errors.password && touched.password && (
               <span className="relative top-0 right-0">{errors.password}</span>
             )}
+            {error && <span className="text-secondary">{error}</span>}
             <button type="submit" className={"btn btn-primary w-full max-w-xs"}>
               Submit
             </button>

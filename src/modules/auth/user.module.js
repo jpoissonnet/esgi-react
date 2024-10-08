@@ -1,32 +1,31 @@
-export const authenticateUser = async (values) =>
-  new Promise((resolve, reject) => {
-    const users = localStorage.getItem("users");
-    if (users) {
-      const parsedUsers = JSON.parse(users);
-      const user = parsedUsers.find(
-        (u) => u.email === values.email && u.password === values.password,
-      );
-      if (user) {
-        resolve("youhou");
-      }
-    }
-    reject("User or password incorrect");
+export const authenticateUser = async (values) => {
+  const response = await fetch("http://localhost:3000/login", {
+    method: "POST",
+    body: JSON.stringify(values),
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
+  const body = await response.json();
+  if (body.error) {
+    throw new Error(body.error);
+  }
+
+  if (body.token) {
+    localStorage.setItem("token", body.token);
+  }
+
+  return body;
+};
 
 export const saveUser = async (values) => {
-  const users = localStorage.getItem("users");
-  if (users) {
-    const parsedUsers = JSON.parse(users);
-    const doesUserExist = parsedUsers.find(
-      (u) => u.email === values.email || u.username === values.username,
-    );
-    if (doesUserExist) {
-      alert("User already exists");
-      return;
-    }
-    parsedUsers.push(values);
-    localStorage.setItem("users", JSON.stringify(parsedUsers));
-    return;
-  }
-  localStorage.setItem("users", JSON.stringify([values]));
+  const userCreated = await fetch("http://localhost:3000/register", {
+    method: "POST",
+    body: JSON.stringify(values),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  console.log(userCreated);
+  return userCreated;
 };

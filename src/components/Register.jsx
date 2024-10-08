@@ -10,16 +10,20 @@ const Register = () => {
       <h1>Register</h1>
       <Formik
         initialValues={{
-          name: "",
-          surname: "",
+          firstname: "",
+          lastname: "",
           username: "",
           email: "",
           password: "",
           confirm_password: "",
         }}
         onSubmit={async (values) => {
-          await saveUser(values);
-          navigate("/login");
+          const response = await saveUser(values);
+          const responseJson = await response.json();
+          if (responseJson.error) {
+            alert(responseJson.error);
+          }
+          // navigate("/login");
         }}
         validateOnBlur
         validate={(values) => {
@@ -49,19 +53,23 @@ const Register = () => {
           >
             {/* nom, prénom, email, username, password */}
             <Field
-              name="name"
-              placeholder="name"
+              name="firstname"
+              placeholder="firstname"
               type="text"
               className={"input input-bordered input-primary w-full max-w-xs"}
             />
-            {errors.name && touched.name && <span>{errors.name}</span>}
+            {errors.firstname && touched.firstname && (
+              <span>{errors.firstname}</span>
+            )}
             <Field
-              name="surname"
-              placeholder="surname"
+              name="lastname"
+              placeholder="lastname"
               type="text"
               className={"input input-bordered input-primary w-full max-w-xs"}
             />
-            {errors.surname && touched.surname && <span>{errors.surname}</span>}
+            {errors.lastname && touched.lastname && (
+              <span>{errors.lastname}</span>
+            )}
             <Field
               name="username"
               placeholder="username"
