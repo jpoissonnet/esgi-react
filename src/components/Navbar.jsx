@@ -1,7 +1,7 @@
 import { useDarkMode } from "usehooks-ts";
 import { useNavigate } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({ username }) => {
   const navigate = useNavigate();
   const { isDarkMode, toggle } = useDarkMode();
   const toggleClass = () => {
@@ -19,33 +19,25 @@ const Navbar = () => {
           esjeu
         </a>
       </div>
-      <div>
-        <button onClick={toggleClass}>
-          Toggle theme {isDarkMode ? "☀️" : "🌝"}
+
+      <div className="flex justify-center gap-3">
+        <button onClick={toggleClass} className="btn btn-ghost">
+          Toggle Theme {isDarkMode ? "🌚" : "🌝"}
         </button>
-      </div>
-      <div className="flex-none">
-        <div className="dropdown dropdown-end">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle avatar"
-          >
-            <div className="w-10 rounded-full">
-              <img
-                alt="Tailwind CSS Navbar component"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-              />
-            </div>
+        <div className="inline-flex items-center gap-3">
+          <div className="w-10 rounded-full overflow-hidden">
+            <img
+              alt="Tailwind CSS Navbar component"
+              src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+            />
           </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+          <p>{username}</p>
+          <button
+            onClick={handleLogout}
+            className="btn btn-outline btn-primary"
           >
-            <li>
-              <button onClick={handleLogout}>Logout</button>
-            </li>
-          </ul>
+            Logout
+          </button>
         </div>
       </div>
     </div>

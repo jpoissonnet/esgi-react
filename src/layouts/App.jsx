@@ -1,11 +1,13 @@
 import "../App.css";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLoaderData } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
 
 function App() {
+  const user = useLoaderData();
+  console.log(user);
   return (
     <>
-      <Navbar />
+      <Navbar username={user.username} />
       <Outlet />
     </>
   );

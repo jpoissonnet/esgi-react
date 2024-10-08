@@ -21,7 +21,16 @@ const router = createBrowserRouter([
       if (!token) {
         return redirect("/login");
       }
-      return {};
+      return await fetch("http://localhost:3000/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => {
+        if (!res.ok) {
+          throw new Error("Unauthorized");
+        }
+        return res.json();
+      });
     },
   },
   {
