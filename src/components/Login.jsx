@@ -1,13 +1,19 @@
 import "../App.css";
 import { Field, Form, Formik } from "formik";
 import { authenticateUser } from "../modules/auth/user.module.js";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [error, setError] = useState(null);
-
+  useEffect(() => {
+    if (location.state?.from === "logout") {
+      setError("You have been logged out");
+      setTimeout(() => setError(null), 2000);
+    }
+  }, [location.state]);
   const handleSubmit = async (values) => {
     try {
       await authenticateUser(values);

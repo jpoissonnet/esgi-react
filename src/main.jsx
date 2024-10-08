@@ -17,9 +17,9 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     loader: async () => {
-      const hasThingsInLocalStorage = localStorage.getItem("users");
-      if (!hasThingsInLocalStorage) {
-        throw redirect("/login");
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return redirect("/login");
       }
       return {};
     },

@@ -1,10 +1,16 @@
 import { useDarkMode } from "usehooks-ts";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const { isDarkMode, toggle } = useDarkMode();
   const toggleClass = () => {
     toggle();
     document.documentElement.dataset.theme = isDarkMode ? "dark" : "light";
+  };
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login", { state: { from: "logout" } });
   };
   return (
     <div className="navbar">
@@ -37,7 +43,7 @@ const Navbar = () => {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
             <li>
-              <a>Logout</a>
+              <button onClick={handleLogout}>Logout</button>
             </li>
           </ul>
         </div>
