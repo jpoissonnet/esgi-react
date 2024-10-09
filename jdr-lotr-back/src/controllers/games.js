@@ -6,7 +6,7 @@ export async function createGame(userId) {
   }
   const datas = await Game.create({ creator: userId });
   console.log(datas.dataValues.id);
-  return { gameId: datas.dataValues.id };
+  return { id: datas.dataValues.id };
 }
 
 export async function updateGame(request) {

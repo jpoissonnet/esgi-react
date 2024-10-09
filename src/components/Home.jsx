@@ -3,7 +3,7 @@ import { useMainContext } from "../contexts/main.js";
 import { useState } from "react";
 
 const Home = () => {
-  const { context } = useMainContext();
+  const { context, setContext } = useMainContext();
   const navigate = useNavigate();
   const [gameId, setGameId] = useState("");
   const newGame = async () => {
@@ -13,10 +13,14 @@ const Home = () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify({ userId: context.id }),
+      body: JSON.stringify({ userId: context.user.id }),
     });
     const data = await response.json();
-    navigate("/game", { state: data });
+    setContext({
+      ...context,
+      game: { ...data, player: context.user.id, creator: context.user.id },
+    });
+    navigate("/game");
   };
   const joinGame = async () => {
     const response = await fetch(`http://localhost:3000/game/join/${gameId}`, {
@@ -25,13 +29,14 @@ const Home = () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify({ userId: context.id }),
+      body: JSON.stringify({ userId: context.user.id }),
     });
     const data = await response.json();
     console.log(data);
     if (data.error) {
       throw new Error(data.error);
     }
+    setContext({ ...context, game: data });
     navigate("/game", { state: data });
   };
 

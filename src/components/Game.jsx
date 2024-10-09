@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useMainContext } from "../contexts/main.js";
@@ -20,12 +20,16 @@ const sendEvent = (ws) => {
 };
 
 const Game = () => {
-  const { state } = useLocation();
   const { context } = useMainContext();
-  // console.log("context", context);
+  if (!context.game) {
+    return <Navigate to={"/"} />;
+  }
   const { current: socket } = useRef(io("http://localhost:3000"));
   usePrepareWebsocket(socket);
-
+  console.log(context);
+  const [isItMyTurn, setIsItMyTurn] = useState(
+    context.user.id === context.game.creator,
+  );
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
@@ -39,7 +43,19 @@ const Game = () => {
 
   return (
     <>
-      <h1>Thats the game: {state?.gameId ?? state?.id}</h1>
+      {isItMyTurn ? (
+        <h2 className={"text-success"}>It's your turn</h2>
+      ) : (
+        <h2 className={"text-error"}>It's not your turn</h2>
+      )}
+      <h1
+        className={
+          "hover:text-secondary hover:underline cursor-pointer active:text-primary"
+        }
+        onClick={() => navigator.clipboard.writeText(context.game.id)}
+      >
+        Thats the game: {context.game.id}
+      </h1>
       <button className={"btn btn-primary"} onClick={() => sendEvent(socket)}>
         Send event
       </button>

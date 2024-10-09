@@ -6,15 +6,17 @@ import { MainContext } from "../contexts/main.js";
 
 function App() {
   const user = useLoaderData();
-  const { setContext } = useContext(MainContext);
+  const { context, setContext } = useContext(MainContext);
   useEffect(() => {
-    setContext(user);
+    setContext({ ...context, user });
   }, []);
   return (
-    <>
-      <Navbar username={user.username} />
-      <Outlet />
-    </>
+    context && (
+      <>
+        <Navbar username={user.username} />
+        <Outlet />
+      </>
+    )
   );
 }
 
