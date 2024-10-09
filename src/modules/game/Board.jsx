@@ -20,18 +20,19 @@ export function calculateWinner(squares) {
   return null;
 }
 
-export function Board({ xIsNext, squares, onPlay }) {
+export function Board({ keepFromPlaying, currentPlayer, squares, onPlay }) {
   function handleClick(i) {
-    if (calculateWinner(squares) || squares[i]) {
+    if (keepFromPlaying) {
+      alert("It's not your turn");
       return;
     }
-    const nextSquares = squares.slice();
-    if (xIsNext) {
-      nextSquares[i] = "X";
-    } else {
-      nextSquares[i] = "O";
+    if (squares[i]) {
+      alert("Square already filled squares[" + i + "] = " + squares[i]);
+      return;
     }
-    onPlay(nextSquares);
+    console.log("squares", squares);
+    squares[i] = currentPlayer;
+    onPlay(squares);
   }
 
   const winner = calculateWinner(squares);
@@ -39,7 +40,7 @@ export function Board({ xIsNext, squares, onPlay }) {
   if (winner) {
     status = "Winner: " + winner;
   } else {
-    status = "Next player: " + (xIsNext ? "X" : "O");
+    status = "Next player: " + (currentPlayer === "X" ? "X" : "O");
   }
 
   return (

@@ -105,10 +105,13 @@ const io = new Server(app.server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("a user connected");
-  socket.emit("message", "Hello from server");
   socket.on("message", (data) => {
-    console.log("received: %s", data);
+    console.log("server: received: %s", data);
+    io.emit("message", "Hello from server");
+  });
+  socket.on("play", (data) => {
+    console.log("server: play: %s", data.squares);
+    io.emit("play", data);
   });
 });
 

@@ -4,46 +4,47 @@ import { io } from "socket.io-client";
 import { useMainContext } from "../contexts/main.js";
 import { Board } from "../modules/game/Board.jsx";
 
-const usePrepareWebsocket = (ws) => {
-  return useEffect(() => {
-    ws.on("connect", () => {
-      console.log("connected");
-    });
-    return () => {
-      ws.disconnect();
-    };
-  }, [ws]);
-};
-
-const sendEvent = (ws) => {
-  ws.emit("message", "Hello from client");
-};
-
 const Game = () => {
   const { context } = useMainContext();
   if (!context.game) {
     return <Navigate to={"/"} />;
   }
   const { current: socket } = useRef(io("http://localhost:3000"));
-  usePrepareWebsocket(socket);
-  console.log(context);
-  const [isItMyTurn, setIsItMyTurn] = useState(
-    context.user.id === context.game.creator,
-  );
-  const [currentMove, setCurrentMove] = useState(0);
-  const xIsNext = currentMove % 2 === 0;
-  const [history, setHistory] = useState([Array(9).fill(null)]);
-  const currentSquares = history[currentMove];
+  useEffect(() => {
+    socket.on("play", (data) => {
+      console.log("<< play", data);
+      setSquares(data.squares);
+      setCurrentPlayer(data.player === "X" ? "O" : "X");
+    });
+    socket.on("message", (data) => {
+      console.log("received message", data);
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket]);
+  const playingAs = context.user.id === context.game.creator ? "X" : "O";
+  const [currentPlayer, setCurrentPlayer] = useState("X");
+  const [squares, setSquares] = useState(Array(9).fill(false));
 
   function handlePlay(nextSquares) {
-    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
-    setHistory(nextHistory);
-    setCurrentMove(nextHistory.length - 1);
+    console.log(">> play");
+    socket.emit("play", {
+      player: currentPlayer,
+      playerId: context.user.id,
+      gameId: context.game.id,
+      squares: nextSquares,
+    });
   }
 
   return (
     <>
-      {isItMyTurn ? (
+      <h3>
+        I am {context.user.username}, playing as {playingAs}
+      </h3>
+      <h4>Current player {currentPlayer}</h4>
+      {(playingAs === "X" && currentPlayer === "X") ||
+      (playingAs === "O" && currentPlayer === "O") ? (
         <h2 className={"text-success"}>It's your turn</h2>
       ) : (
         <h2 className={"text-error"}>It's not your turn</h2>
@@ -59,10 +60,15 @@ const Game = () => {
           {context.game.id}
         </span>
       </h1>
-      <button className={"btn btn-primary"} onClick={() => sendEvent(socket)}>
-        Send event
+      <Board
+        keepFromPlaying={playingAs !== currentPlayer}
+        currentPlayer={currentPlayer}
+        squares={squares}
+        onPlay={handlePlay}
+      />
+      <button onClick={() => setSquares(Array(9).fill(null))}>
+        Reset squares{" "}
       </button>
-      <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
     </>
   );
 };
