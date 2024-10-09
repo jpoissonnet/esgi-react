@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useMainContext } from "../contexts/main.js";
@@ -30,9 +30,9 @@ const Game = () => {
   const [isItMyTurn, setIsItMyTurn] = useState(
     context.user.id === context.game.creator,
   );
-  const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
+  const [history, setHistory] = useState([Array(9).fill(null)]);
   const currentSquares = history[currentMove];
 
   function handlePlay(nextSquares) {
@@ -48,13 +48,16 @@ const Game = () => {
       ) : (
         <h2 className={"text-error"}>It's not your turn</h2>
       )}
-      <h1
-        className={
-          "hover:text-secondary hover:underline cursor-pointer active:text-primary"
-        }
-        onClick={() => navigator.clipboard.writeText(context.game.id)}
-      >
-        Thats the game: {context.game.id}
+      <h1>
+        That's the game:
+        <span
+          onClick={() => navigator.clipboard.writeText(context.game.id)}
+          className={
+            "hover:text-secondary hover:underline cursor-pointer active:text-primary"
+          }
+        >
+          {context.game.id}
+        </span>
       </h1>
       <button className={"btn btn-primary"} onClick={() => sendEvent(socket)}>
         Send event
