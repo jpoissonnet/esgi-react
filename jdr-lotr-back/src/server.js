@@ -11,8 +11,8 @@ import { usersRoutes } from "./routes/users.js";
 import { gamesRoutes } from "./routes/games.js";
 //bdd
 import { sequelize } from "./bdd.js";
-import { WebSocketServer } from "ws";
-
+// import { WebSocketServer } from "ws";
+import { Server } from "socket.io";
 //Test de la connexion
 try {
   sequelize.authenticate();
@@ -98,20 +98,18 @@ usersRoutes(app, blacklistedTokens);
 //gestion des jeux
 gamesRoutes(app);
 
-const wss = new WebSocketServer({ port: 8080 });
+const io = new Server(app.server, {
+  cors: {
+    origin: "*",
+  },
+});
 
-wss.on("connection", function connection(ws) {
-  ws.on("error", console.error);
-
-  ws.on("message", function message(data) {
+io.on("connection", (socket) => {
+  console.log("a user connected");
+  socket.emit("message", "Hello from server");
+  socket.on("message", (data) => {
     console.log("received: %s", data);
   });
-
-  ws.on("pong", (data) => {
-    console.log("received: %s", data);
-  });
-
-  ws.send("something");
 });
 
 /**********

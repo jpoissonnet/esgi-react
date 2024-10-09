@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useMainContext } from "../contexts/main.js";
+import { useState } from "react";
 
 const Home = () => {
   const { context } = useMainContext();
-  console.log(context);
   const navigate = useNavigate();
   const newGame = async () => {
     const response = await fetch("http://localhost:3000/game", {
@@ -18,17 +18,14 @@ const Home = () => {
     navigate("/game", { state: data });
   };
   const joinGame = async () => {
-    const response = await fetch(
-      "http://localhost:3000/game/join/8a52771a-7336-4c76-8a48-e9932a9742f7",
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ userId: context.id }),
+    const response = await fetch(`http://localhost:3000/game/join/${gameId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    );
+      body: JSON.stringify({ userId: context.id }),
+    });
     const data = await response.json();
     console.log(data);
     if (data.error) {
@@ -47,7 +44,11 @@ const Home = () => {
           Create a new game
         </button>
         <div className={"flex gap-3"}>
-          <input type="text" className={"input input-secondary"} />
+          <input
+            onChange={(e) => setGameId(e.target.value)}
+            type="text"
+            className={"input input-secondary"}
+          />
           <button className="btn btn-secondary" onClick={joinGame}>
             Join game
           </button>

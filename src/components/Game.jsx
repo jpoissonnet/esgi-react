@@ -1,36 +1,31 @@
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef } from "react";
-
-const prepareWebsocket = (ws) => {
-  console.log(ws);
-  ws.onopen = () => {
-    console.log("connected");
-  };
-  ws.onmessage = (event) => {
-    console.log(event.data);
-  };
-  ws.onerror = (error) => {
-    console.error(error);
-  };
-  return () => {
-    ws.close();
-  };
+import { io } from "socket.io-client";
+import { useMainContext } from "../contexts/main.js";
+const usePrepareWebsocket = (ws) => {
+  return useEffect(() => {
+    ws.on("connect", () => {
+      console.log("connected");
+    });
+    return () => {
+      ws.disconnect();
+    };
+  }, [ws]);
 };
 
 const sendEvent = (ws) => {
-  console.log("sending event");
-  ws.send("pouet");
+  ws.emit("message", "Hello from client");
 };
 const Game = () => {
   const { state } = useLocation();
-  const { current: ws } = useRef(new WebSocket("ws://localhost:8080"));
-  useEffect(() => {
-    return prepareWebsocket(ws);
-  }, []);
+  const { context } = useMainContext();
+  console.log("context", context);
+  const { current: socket } = useRef(io("http://localhost:3000"));
+  usePrepareWebsocket(socket);
   return (
     <>
-      <h1>Thats the game: {state?.gameId}</h1>
-      <button className={"btn btn-primary"} onClick={() => sendEvent(ws)}>
+      <h1>Thats the game: {state?.gameId ?? state?.id}</h1>
+      <button className={"btn btn-primary"} onClick={() => sendEvent(socket)}>
         Send event
       </button>
     </>
