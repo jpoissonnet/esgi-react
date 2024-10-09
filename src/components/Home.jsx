@@ -5,6 +5,7 @@ import { useState } from "react";
 const Home = () => {
   const { context } = useMainContext();
   const navigate = useNavigate();
+  const [gameId, setGameId] = useState("");
   const newGame = async () => {
     const response = await fetch("http://localhost:3000/game", {
       method: "POST",
