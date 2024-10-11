@@ -29,8 +29,8 @@ const Navbar = ({ username, initials }) => {
         </a>
       </div>
       <div className="flex justify-center gap-3">
-        <button onClick={toggleClass} className="btn btn-ghost">
-          Toggle Theme {isDarkMode ? "🌚" : "🌝"}
+        <button onClick={toggleClass} className="btn btn-outline">
+          Toggle Theme {isDarkMode ? "🌕" : "☀️"}
         </button>
         <div className="inline-flex items-center gap-3">
           <div className="w-10 aspect-square rounded-full overflow-hidden">
