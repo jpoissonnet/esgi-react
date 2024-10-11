@@ -89,7 +89,11 @@ const Login = () => {
               <span className="relative top-0 right-0">{errors.password}</span>
             )}
             {error && <span className="text-secondary">{error}</span>}
-            <button type="submit" className={"btn btn-primary w-full max-w-xs"}>
+            <button
+              type="submit"
+              className={`btn btn-primary w-full max-w-xs ${Boolean(error) && "btn-disabled"}`}
+              disabled={Boolean(error)}
+            >
               Submit
             </button>
             <p>
