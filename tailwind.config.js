@@ -5,6 +5,11 @@ export default {
   theme: {
     extend: {},
   },
+  safelist: [
+    {
+      pattern: /(from|to)-(blue|green|yellow|red|indigo|purple|pink)-(400|600)/,
+    },
+  ],
   darkMode: ["class", '[data-theme="dark"]'],
   daisyui: {
     themes: ["light", "dark"],

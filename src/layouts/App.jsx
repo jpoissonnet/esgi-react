@@ -13,7 +13,10 @@ function App() {
   return (
     context && (
       <>
-        <Navbar username={user.username} />
+        <Navbar
+          username={user.username}
+          initials={user.firstname[0] + user.lastname[0]}
+        />
         <Outlet />
       </>
     )
