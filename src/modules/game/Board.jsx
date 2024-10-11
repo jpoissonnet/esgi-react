@@ -46,7 +46,7 @@ export function Board({ keepFromPlaying, currentPlayer, squares, onPlay }) {
   return (
     <section className={"mt-12 flex flex-col items-center"}>
       <div className="status">{status}</div>
-      <div className="grid grid-cols-3 gap-2 max-w-80 bg-primary rounded-xl border-transparent border overflow-clip isolate">
+      <div className="grid grid-cols-3 gap-2 max-w-screen-md bg-primary rounded-xl border-transparent border overflow-clip isolate">
         {[...Array(9)].map((_, i) => (
           <Square
             key={i}

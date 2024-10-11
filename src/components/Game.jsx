@@ -11,6 +11,9 @@ const Game = () => {
   }
   const { current: socket } = useRef(io("http://localhost:3000"));
   useEffect(() => {
+    socket.on("connect", () => {
+      socket.emit("join", { userId: context.user.id, gameId: context.game.id });
+    });
     socket.on("play", (data) => {
       console.log("<< play", data);
       setSquares(data.squares);
@@ -19,6 +22,7 @@ const Game = () => {
     socket.on("message", (data) => {
       console.log("received message", data);
     });
+
     return () => {
       socket.disconnect();
     };

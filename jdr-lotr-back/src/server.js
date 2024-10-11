@@ -111,7 +111,11 @@ io.on("connection", (socket) => {
   });
   socket.on("play", (data) => {
     console.log("server: play: %s", data.squares);
-    io.emit("play", data);
+    io.to(data.gameId).emit("play", data);
+  });
+  socket.on("join", ({ userId, gameId }) => {
+    console.log(`server: ${userId} joined ${gameId}`);
+    socket.join(gameId);
   });
 });
 
