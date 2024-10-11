@@ -1,17 +1,32 @@
 import "../App.css";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, useField } from "formik";
 import { authenticateUser } from "../modules/auth/user.module.js";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+const users = {
+  paul: {
+    email: "pouet@pouet.fr",
+    password: "pouet",
+  },
+  jules: {
+    email: "poissonnet.jules@gmail.com",
+    password: "pouet",
+  },
+};
 
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [error, setError] = useState(null);
+  const formRef = useRef();
   useEffect(() => {
     if (location.state?.from === "logout") {
       setError("You have been logged out");
-      setTimeout(() => setError(null), 2000);
+      setTimeout(() => {
+        setError(null);
+        navigate(location.pathname, { state: null });
+      }, 2000);
     }
   }, [location.state]);
   const handleSubmit = async (values) => {
@@ -25,15 +40,32 @@ const Login = () => {
     }
     navigate("/");
   };
-
+  const fillLoginAs = (user) => {
+    formRef.current?.setValues(users[user]);
+  };
   return (
     <>
       <h1>Login</h1>
+      <div className="mx-auto my-3 flex items-center gap-3">
+        <button
+          className="btn btn-ghost max-w-fit"
+          onClick={() => fillLoginAs("paul")}
+        >
+          Login as Paul
+        </button>
+        <button
+          className="btn btn-ghost max-w-fit"
+          onClick={() => fillLoginAs("jules")}
+        >
+          Login as Jules
+        </button>
+      </div>
       <Formik
         initialValues={{
           email: "",
           password: "",
         }}
+        innerRef={formRef}
         onSubmit={handleSubmit}
       >
         {({ errors, touched }) => (
