@@ -20,7 +20,13 @@ export function calculateWinner(squares) {
   return null;
 }
 
-export function Board({ keepFromPlaying, currentPlayer, squares, onPlay }) {
+export function Board({
+  keepFromPlaying,
+  currentPlayer,
+  squares,
+  onPlay,
+  onWin,
+}) {
   function handleClick(i) {
     if (keepFromPlaying) {
       alert("It's not your turn");
@@ -39,6 +45,7 @@ export function Board({ keepFromPlaying, currentPlayer, squares, onPlay }) {
   let status;
   if (winner) {
     status = "Winner: " + winner;
+    onWin(winner);
   } else {
     status = "Next player: " + (currentPlayer === "X" ? "X" : "O");
   }

@@ -1,10 +1,11 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useMainContext } from "../contexts/main.js";
 import { Board } from "../modules/game/Board.jsx";
 
 const Game = () => {
+  const navigate = useNavigate();
   const { context } = useMainContext();
   if (!context.game) {
     return <Navigate to={"/"} />;
@@ -30,6 +31,7 @@ const Game = () => {
   const playingAs = context.user.id === context.game.creator ? "X" : "O";
   const [currentPlayer, setCurrentPlayer] = useState("X");
   const [squares, setSquares] = useState(Array(9).fill(false));
+  const [winner, setWinner] = useState(null);
 
   function handlePlay(nextSquares) {
     console.log(">> play");
@@ -38,6 +40,27 @@ const Game = () => {
       playerId: context.user.id,
       gameId: context.game.id,
       squares: nextSquares,
+    });
+  }
+
+  function handleWin(w) {
+    const dialog = document.getElementById("finish");
+    if (w === playingAs) {
+      console.log("👋You win", w, playingAs);
+    } else {
+      console.log("👋You lose", w, playingAs);
+    }
+    setWinner(w);
+    dialog.showModal();
+    fetch(`http://localhost:3000/game/finish/${context.game.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        winner: w,
+        score: 100,
+      }),
     });
   }
 
@@ -54,11 +77,11 @@ const Game = () => {
         <h2 className={"text-error"}>It's not your turn</h2>
       )}
       <h1>
-        That's the game:
+        Game id:
         <span
           onClick={() => navigator.clipboard.writeText(context.game.id)}
           className={
-            "hover:text-secondary hover:underline cursor-pointer active:text-primary"
+            "ml-1 hover:text-secondary hover:underline cursor-pointer active:text-primary"
           }
         >
           {context.game.id}
@@ -69,10 +92,22 @@ const Game = () => {
         currentPlayer={currentPlayer}
         squares={squares}
         onPlay={handlePlay}
+        onWin={handleWin}
       />
-      <button onClick={() => setSquares(Array(9).fill(null))}>
-        Reset squares{" "}
-      </button>
+      <dialog id="finish" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">
+            {winner === playingAs ? "🎉 You win" : "😢 You lose"}
+          </h3>
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="btn" onClick={() => navigate("/")}>
+                Close
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </>
   );
 };
