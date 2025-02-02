@@ -11,7 +11,7 @@ const Game = () => {
     return <Navigate to={"/"} />;
   }
   const { current: socket } = useRef(
-    io("https://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io:8080"),
+    io("https://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io"),
   );
   useEffect(() => {
     socket.on("connect", () => {
@@ -55,7 +55,7 @@ const Game = () => {
     setWinner(w);
     dialog.showModal();
     fetch(
-      `https://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io:8080/game/finish/${context.game.id}`,
+      `https://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io/game/finish/${context.game.id}`,
       {
         method: "PATCH",
         headers: {
