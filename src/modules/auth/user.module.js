@@ -1,6 +1,6 @@
 export const authenticateUser = async (values) => {
   const response = await fetch(
-    "https://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io/login",
+    "https://app-a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io/login",
     {
       method: "POST",
       body: JSON.stringify(values),
@@ -23,7 +23,7 @@ export const authenticateUser = async (values) => {
 
 export const saveUser = async (values) => {
   const userCreated = await fetch(
-    "https://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io/register",
+    "https://app-a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io/register",
     {
       method: "POST",
       body: JSON.stringify(values),
