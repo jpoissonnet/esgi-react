@@ -24,7 +24,7 @@ const router = createBrowserRouter([
         return redirect("/login");
       }
       const response = await fetch(
-        "http://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io:8080/users/me",
+        "https://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io:8080/users/me",
         {
           headers: {
             Authorization: `Bearer ${token}`,

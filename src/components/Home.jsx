@@ -8,7 +8,7 @@ const Home = () => {
   const [gameId, setGameId] = useState("");
   const newGame = async () => {
     const response = await fetch(
-      "http://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io:8080/game",
+      "https://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io:8080/game",
       {
         method: "POST",
         headers: {
@@ -27,7 +27,7 @@ const Home = () => {
   };
   const joinGame = async () => {
     const response = await fetch(
-      `http://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io:8080/game/join/${gameId}`,
+      `https://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io:8080/game/join/${gameId}`,
       {
         method: "PATCH",
         headers: {
