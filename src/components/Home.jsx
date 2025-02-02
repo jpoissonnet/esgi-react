@@ -7,14 +7,17 @@ const Home = () => {
   const navigate = useNavigate();
   const [gameId, setGameId] = useState("");
   const newGame = async () => {
-    const response = await fetch("http://localhost:3000/game", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+    const response = await fetch(
+      "http://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io:8080/game",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ userId: context.user.id }),
       },
-      body: JSON.stringify({ userId: context.user.id }),
-    });
+    );
     const data = await response.json();
     setContext({
       ...context,
@@ -23,14 +26,17 @@ const Home = () => {
     navigate("/game");
   };
   const joinGame = async () => {
-    const response = await fetch(`http://localhost:3000/game/join/${gameId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+    const response = await fetch(
+      `http://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io:8080/game/join/${gameId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ userId: context.user.id }),
       },
-      body: JSON.stringify({ userId: context.user.id }),
-    });
+    );
     const data = await response.json();
     console.log(data);
     if (data.error) {

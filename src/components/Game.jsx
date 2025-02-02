@@ -10,7 +10,9 @@ const Game = () => {
   if (!context.game) {
     return <Navigate to={"/"} />;
   }
-  const { current: socket } = useRef(io("http://localhost:3000"));
+  const { current: socket } = useRef(
+    io("http://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io:8080"),
+  );
   useEffect(() => {
     socket.on("connect", () => {
       socket.emit("join", { userId: context.user.id, gameId: context.game.id });
@@ -52,16 +54,19 @@ const Game = () => {
     }
     setWinner(w);
     dialog.showModal();
-    fetch(`http://localhost:3000/game/finish/${context.game.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
+    fetch(
+      `http://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io:8080/game/finish/${context.game.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          winner: w,
+          score: 100,
+        }),
       },
-      body: JSON.stringify({
-        winner: w,
-        score: 100,
-      }),
-    });
+    );
   }
 
   return (

@@ -1,11 +1,14 @@
 export const authenticateUser = async (values) => {
-  const response = await fetch("http://localhost:3000/login", {
-    method: "POST",
-    body: JSON.stringify(values),
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetch(
+    "http://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io:8080/login",
+    {
+      method: "POST",
+      body: JSON.stringify(values),
+      headers: {
+        "Content-Type": "application/json",
+      },
     },
-  });
+  );
   const body = await response.json();
   if (body.error) {
     throw new Error(body.error);
@@ -19,13 +22,16 @@ export const authenticateUser = async (values) => {
 };
 
 export const saveUser = async (values) => {
-  const userCreated = await fetch("http://localhost:3000/register", {
-    method: "POST",
-    body: JSON.stringify(values),
-    headers: {
-      "Content-Type": "application/json",
+  const userCreated = await fetch(
+    "http://app_a858ff1a-2e9e-4771-8fdf-fbdfb53e6b78.cleverapps.io:8080/register",
+    {
+      method: "POST",
+      body: JSON.stringify(values),
+      headers: {
+        "Content-Type": "application/json",
+      },
     },
-  });
+  );
   console.log(userCreated);
   return userCreated;
 };
